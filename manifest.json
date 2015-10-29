@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name": "Friends Ratings",
+  "version": "1.0",
+
+  "description": "This extension shows codeforces current ratings.",
+  "icons" : {
+  	"64" : "icon.png"
+  },
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+
+  "background" : {
+  	"scripts" : ["background.js","jquery-1.10.2.js"]
+  },
+
+  "options_page" : "options.html",
+
+  "content_scripts" : [
+  	{
+  		"matches" : ["http://*/*","https://*/*"],
+  		"js" : ["myScript.js"]
+  	}
+  ],
+
+  "permissions": [
+  	"storage",
+    "activeTab",
+    "https://ajax.googleapis.com/",
+    "http://codeforces.com/*"
+  ]
+}
