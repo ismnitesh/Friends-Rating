@@ -1,81 +1,65 @@
-window.onload= function() {
+window.onload = function() {
 	document.getElementById('Add').onclick = function() {
 		var value = document.getElementById('user_id').value;
-		//alert(value);
 		if(!value)
 		{
 			alert('Error: No value');
 			return;
 		}
-		chrome.storage.sync.set({'user_id':value},function(){
-			alert("saved!");
-
-
-		chrome.storage.local.get({userKeyIds: []}, function (result) {
-		var userKeyIds = result.userKeyIds;
-		userKeyIds.push({'keyPairId': value});
-		chrome.storage.local.set({userKeyIds: userKeyIds}, function () {
-			chrome.storage.local.get('userKeyIds', function (result) {
-		//		console.log(result.userKeyIds);
+		chrome.storage.sync.set({'user_id':value},function() {
+			document.getElementById('user_id').value="";
+			chrome.storage.local.get({userKeyIds: []}, function (result) {
+				var userKeyIds = result.userKeyIds;
+				var flag=0;
+				for(i=0;i<userKeyIds.length;i++){
+					if(userKeyIds[i].keyPairId==value){
+						flag=1;
+						alert(value+" is already friend!");
+					}
+				}
+				if(flag==0){
+					userKeyIds.push({'keyPairId': value});
+				}
+				chrome.storage.local.set({userKeyIds: userKeyIds}, function () {
+					chrome.storage.local.get('userKeyIds', function (result) {
+					});
 				});
 			});
 		});
-
-
-		});
 	};
-	document.getElementById('get').onclick = function() {
-		chrome.storage.sync.get('user_id',function(data){
-			alert(data.user_id);
-		});
-	};
+	// document.getElementById('get').onclick = function() {
+	// 	chrome.storage.sync.get('user_id',function(data){
+	// 		alert(data.user_id);
+	// 	});
+	// };
 }
 
-function hello(api,callback){
-	//console.log(api);
-	$.get(api,function(data){
-		//console.log(data.result[0]);
-		callback(null,data.result[0].handle +" "+ data.result[0].rating+" ");
-	}).fail(function(err){
-		callback(true,err.statusText);
-	});
-}
-
-
-document.getElementById('b1').onclick = function(){
-	chrome.storage.local.get({userKeyIds: []}, function (result) {
+document.getElementById('b1').onclick = function() {
+	chrome.storage.local.get({userKeyIds:[]},function(result) {
 		var arr = result.userKeyIds;
-		var str=" ";
-		var temp = 0;
+		var str = " ";
+		var temp=0;
+		var api = "http://codeforces.com/api/user.info?handles=";
 		for(i=0;i<arr.length;i++){
-			var api="http://codeforces.com/api/user.info?handles=";
-			api=api+arr[i].keyPairId;
-			//console.log("here "+i);
-			hello(api,function(err,res){
-				if(err){
-					alert(res);
-					return;
+			api=api+";"+arr[i].keyPairId;
+		}
+		if(arr.length==0)
+			document.getElementById("demo").innerHTML = "No Data Entered :(";
+		else{
+			$.get(api,function(data){
+				for(i=0;i<arr.length;i++){
+					str=str+data.result[i].handle+" "+data.result[i].rating+"<br/>";
+					console.log(data.result[i].handle);
 				}
-				str +=res+"<br/>";
-				temp++;
-				if(i == temp){
-					//console.log(str);
-					document.getElementById("demo").innerHTML = str;
-				}
+				document.getElementById("demo").innerHTML = str;
 			});
 		}
-		document.getElementById("demo").innerHTML = str;
-		//console.log(str);
-		
 	});
-	
 }
-
-
 
 document.getElementById('remove').onclick = function(){
 	var arr = new Array();
 	chrome.storage.local.set({userKeyIds: arr}, function() {
 		alert('removed');
-		});
+	});
 }
