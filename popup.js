@@ -37,7 +37,7 @@ window.onload = function() {
 document.getElementById('b1').onclick = function() {
 	chrome.storage.local.get({userKeyIds:[]},function(result) {
 		var arr = result.userKeyIds;
-		var str = " ";
+		var str = "Friends Rating:<br/>";
 		var temp=0;
 		var api = "http://codeforces.com/api/user.info?handles=";
 		for(i=0;i<arr.length;i++){
@@ -61,5 +61,20 @@ document.getElementById('remove').onclick = function(){
 	var arr = new Array();
 	chrome.storage.local.set({userKeyIds: arr}, function() {
 		alert('removed');
+	});
+}
+
+document.getElementById("contest").onclick = function() {
+	var con_api = "http://codeforces.com/api/contest.list";
+	var str_contest= "Future Contest: <br/>";
+	$.get(con_api,function(data){
+		for(i=0;i<10;i++){
+			if(data.result[i].phase!="BEFORE")
+				break;
+			else{
+				str_contest=str_contest+" "+data.result[i].name+"<br/>";
+			}
+		}
+		document.getElementById("contest_list").innerHTML = str_contest;
 	});
 }
