@@ -48,8 +48,8 @@ document.getElementById('b1').onclick = function() {
 		else{
 			$.get(api,function(data){
 				for(i=0;i<arr.length;i++){
-					str=str+data.result[i].handle+" "+data.result[i].rating+"<br/>";
-					console.log(data.result[i].handle);
+					str=str+"<a href= http://codeforces.com/profile/"+data.result[i].handle+" target= '_blank'>"+data.result[i].handle+"</a>"+" "+data.result[i].rating+"<br/>";
+				//	console.log(data.result[i].handle);
 				}
 				document.getElementById("demo").innerHTML = str;
 			});
