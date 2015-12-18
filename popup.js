@@ -37,7 +37,7 @@ window.onload = function() {
 document.getElementById('b1').onclick = function() {
 	chrome.storage.local.get({userKeyIds:[]},function(result) {
 		var arr = result.userKeyIds;
-		var str = "Friends Rating:<br/>";
+		var str = "Friends Rating:<br/><table border=1>";
 		var temp=0;
 		var api = "http://codeforces.com/api/user.info?handles=";
 		for(i=0;i<arr.length;i++){
@@ -48,16 +48,17 @@ document.getElementById('b1').onclick = function() {
 		else{
 			$.get(api,function(data){
 				for(i=0;i<arr.length;i++){
-					str=str+"<a href= http://codeforces.com/profile/"+data.result[i].handle+" target= '_blank'>"+data.result[i].handle+"</a>"+" "+data.result[i].rating+"<br/>";
+					str=str+"<tr><td><a href= http://codeforces.com/profile/"+data.result[i].handle+" target= '_blank'>"+data.result[i].handle+"</a>"+"<td>"+data.result[i].rating+"</tr>";
 				//	console.log(data.result[i].handle);
 				}
+				str=str+"</table>";
 				document.getElementById("demo").innerHTML = str;
 			});
 		}
 	});
 }
 
-document.getElementById('remove').onclick = function(){
+document.getElementById('remove').onclick = function() {
 	var arr = new Array();
 	chrome.storage.local.set({userKeyIds: arr}, function() {
 		alert('removed');
